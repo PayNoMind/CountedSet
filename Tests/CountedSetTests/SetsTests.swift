@@ -308,11 +308,13 @@ class SetsTests: XCTestCase {
     }
 
     func testFlatMapToCountedSet() {
-        let countedSet = CountedSet([1, 2, 3, 4, 5, 5])
+        let countedSet = CountedSet<Int>([1, 2, 3, 4, 5, 5])
         let expected = CountedSet([1.5, 1.5, 3.5, 3.5, 5.5, 5.5, 5.5])
-        
-        let result = countedSet.flatMapToCountedSet { $0 % 2 == 0 ? nil : (element: 0.5 + Double($0), count: 1 + $1) }
-        
+
+        let result = countedSet.flatMapToCountedSet { (element, count: Int) -> (element: Double, count: Int)? in
+            element % 2 == 0 ? nil : (element: 0.5 + Double(element), count: 1 + count)
+        }
+
         XCTAssertEqual(expected, result)
     }
 
